@@ -1,11 +1,50 @@
+import {apiClient} from "@/api/api-client";
 import tuitkfLogo from "@/assets/tuitkf-logo.png";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
+import { auth } from "@/features/auth/auth-slice";
+import { setToken } from "@/helpers/action-token";
+import { FormEvent, useRef, useState } from "react";
+import { useDispatch } from "react-redux";
+import { toast } from "sonner";
 
 export default function Auth() {
   const [register, setRegister] = useState<boolean>(false);
+  const nameRef = useRef<HTMLInputElement>(null)
+  const phoneRef = useRef<HTMLInputElement>(null)
+  const passwordRef = useRef<HTMLInputElement>(null);
+
+  const dispatch = useDispatch()
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault()
+    try {
+      
+      const authData = {
+        name: nameRef?.current?.value,
+        phone: phoneRef?.current?.value,
+        password: passwordRef?.current?.value
+      }
+
+      if(authData.name && authData.password && authData.phone && register) {
+        const res = await apiClient.post('/register', authData)
+        setToken(res.data.token)
+        dispatch(auth(res.data.user))
+        return
+      }
+
+      if(authData.password && authData.phone && !register) {
+        const res = await apiClient.post("/login", authData);
+        setToken(res.data.token);
+        dispatch(auth(res.data.user));
+        return;
+      }
+    } catch (error) {
+      const result = error as Error
+      toast.error(result.message);
+    }
+  }
 
   return (
     <div className="w-screen h-screen flex items-center justify-center font-serif select-none">
@@ -13,7 +52,10 @@ export default function Auth() {
         <div className="rounded-full h-[200px] w-[200px] bg-white">
           <img width={200} height={200} src={tuitkfLogo} alt="tuitkf logo" />
         </div>
-        <form className="max-w-[350px] w-full flex flex-col gap-4">
+        <form
+          onSubmit={(e) => handleSubmit(e)}
+          className="max-w-[350px] w-full flex flex-col gap-4"
+        >
           <Label className={` flex-col gap-2 ${register ? "flex" : "hidden"}`}>
             <span className="">Ism familyangizni kiriting!</span>
             <Input
