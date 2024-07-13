@@ -1,50 +1,61 @@
-import {apiClient} from "@/api/api-client";
+import { apiClient } from "@/api/api-client";
+import { RootState } from "@/app/store";
 import tuitkfLogo from "@/assets/tuitkf-logo.png";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { auth } from "@/features/auth/auth-slice";
+import { auth, authFail, authStart } from "@/features/auth/auth-slice";
 import { setToken } from "@/helpers/action-token";
 import { FormEvent, useRef, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
 
 export default function Auth() {
   const [register, setRegister] = useState<boolean>(false);
-  const nameRef = useRef<HTMLInputElement>(null)
-  const phoneRef = useRef<HTMLInputElement>(null)
+  const nameRef = useRef<HTMLInputElement>(null);
+  const phoneRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+  const { loading } = useSelector((state: RootState) => state.auth);
 
   const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
-      
+      dispatch(authStart());
       const authData = {
         name: nameRef?.current?.value,
         phone: phoneRef?.current?.value,
-        password: passwordRef?.current?.value
+        password: passwordRef?.current?.value,
+      };
+
+      if (authData.name && authData.password && authData.phone && register) {
+        const res = await apiClient.post("/register", authData);
+        setToken(res.data.token);
+        dispatch(auth(res.data.user));
+        return;
       }
 
-      if(authData.name && authData.password && authData.phone && register) {
-        const res = await apiClient.post('/register', authData)
-        setToken(res.data.token)
-        dispatch(auth(res.data.user))
-        return
-      }
-
-      if(authData.password && authData.phone && !register) {
+      if (authData.password && authData.phone && !register) {
         const res = await apiClient.post("/login", authData);
         setToken(res.data.token);
         dispatch(auth(res.data.user));
         return;
       }
-    } catch (error) {
-      const result = error as Error
-      toast.error(result.message);
+    } catch (error: any) {
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        toast.error(error.response.data.message);
+        dispatch(authFail(error.response.data.message));
+      } else {
+        toast.error(error.message);
+        dispatch(authFail(error.message));
+      }
     }
-  }
+  };
 
   return (
     <div className="w-screen h-screen flex items-center justify-center font-serif select-none">
@@ -62,6 +73,7 @@ export default function Auth() {
               type="text"
               className="bg-white"
               placeholder="Shavqiddin Tilovov"
+              ref={nameRef}
             />
           </Label>
           <Label className="flex flex-col gap-2">
@@ -71,6 +83,7 @@ export default function Auth() {
               className="bg-white"
               placeholder="+998*********"
               defaultValue={"+998"}
+              ref={phoneRef}
             />
           </Label>
           <Label className="flex flex-col gap-2">
@@ -79,10 +92,13 @@ export default function Auth() {
               type="password"
               className="bg-white"
               placeholder="********"
+              ref={passwordRef}
             />
           </Label>
           <Button type="submit">
-            {register ? "Ro'yhatdan o'tish" : "Kirish"}
+            {register && !loading && "Ro'yhatdan o'tish"}
+            {!register && !loading && "Kirish"}
+            {loading && "loading..."}
           </Button>
           <button
             type="button"
