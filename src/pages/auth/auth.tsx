@@ -6,8 +6,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { auth, authFail, authStart } from "@/features/auth/auth-slice";
 import { setToken } from "@/helpers/action-token";
-import { FormEvent, useRef, useState } from "react";
+import useGetUser from "@/hooks/use-get-user";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 export default function Auth() {
@@ -17,7 +19,20 @@ export default function Auth() {
   const passwordRef = useRef<HTMLInputElement>(null);
 
   const dispatch = useDispatch();
-  const { loading } = useSelector((state: RootState) => state.auth);
+  const { getUser } = useGetUser()
+  const navigate = useNavigate()
+
+  const { loading, isLogin, error } = useSelector((state: RootState) => state.auth);
+
+  useEffect(() => {
+    getUser()
+  }, [getUser])
+
+  useEffect(() => {
+    if (isLogin && !error) {
+      navigate("/");
+    }
+  }, [isLogin, error]);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
