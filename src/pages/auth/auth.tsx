@@ -13,7 +13,6 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 export default function Auth() {
-  const [register, setRegister] = useState<boolean>(false);
   const nameRef = useRef<HTMLInputElement>(null);
   const phoneRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
@@ -39,19 +38,11 @@ export default function Auth() {
     try {
       dispatch(authStart());
       const authData = {
-        name: nameRef?.current?.value,
         phone: phoneRef?.current?.value,
         password: passwordRef?.current?.value,
       };
 
-      if (authData.name && authData.password && authData.phone && register) {
-        const res = await apiClient.post("/register", authData);
-        setToken(res.data.token);
-        dispatch(auth(res.data.user));
-        return;
-      }
-
-      if (authData.password && authData.phone && !register) {
+      if (authData.password && authData.phone) {
         const res = await apiClient.post("/login", authData);
         setToken(res.data.token);
         dispatch(auth(res.data.user));
@@ -82,15 +73,6 @@ export default function Auth() {
           onSubmit={(e) => handleSubmit(e)}
           className="max-w-[350px] w-full flex flex-col gap-4"
         >
-          <Label className={` flex-col gap-2 ${register ? "flex" : "hidden"}`}>
-            <span className="">Ism familyangizni kiriting!</span>
-            <Input
-              type="text"
-              className="bg-white"
-              placeholder="Shavqiddin Tilovov"
-              ref={nameRef}
-            />
-          </Label>
           <Label className="flex flex-col gap-2">
             <span className="">Telefon raqamingizni kiriting!</span>
             <Input
@@ -108,20 +90,12 @@ export default function Auth() {
               className="bg-white"
               placeholder="********"
               ref={passwordRef}
+              required={true}
             />
           </Label>
           <Button type="submit">
-            {register && !loading && "Ro'yhatdan o'tish"}
-            {!register && !loading && "Kirish"}
-            {loading && "loading..."}
+            {loading ? "loading..." : "Kirish"}
           </Button>
-          <button
-            type="button"
-            onClick={() => setRegister(!register)}
-            className="text-xs w-full text-right underline font-sans"
-          >
-            {register ? "Kirish" : "Ro'yhatdan o'tish"}
-          </button>
         </form>
       </div>
     </div>

@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 
 export default function AuthPrivate({ children }: { children: ReactNode }) {
-  const { isLogin } = useSelector((state: RootState) => state.auth)
+  const { isLogin, user, error } = useSelector((state: RootState) => state.auth)
   const { getUser } = useGetUser()
   const token = getToken()
 
@@ -16,9 +16,9 @@ export default function AuthPrivate({ children }: { children: ReactNode }) {
     }
   }, [getUser])
 
-  if(isLogin && token) {
+  if(isLogin && token && user?.role === 'user') {
     return children
-  }else if(token && !isLogin) {
+  }else if(token && !error) {
     return <p>Loader...</p>
   }
 

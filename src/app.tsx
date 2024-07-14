@@ -2,6 +2,12 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import RootLayout from "@/layouts/root-layout";
 import AuthPrivate from "@/private/auth-private";
 import Auth from "@/pages/auth/auth";
+import { lazy, Suspense } from "react";
+
+
+// Pages
+import Home from "@/pages/home/home";
+const Profile = lazy(() => import("@/pages/profile"));  
 
 export default function App() {
 
@@ -14,7 +20,20 @@ export default function App() {
         </AuthPrivate>
       ),
       errorElement: <p>Error page</p>,
-      children: [],
+      children: [
+        {
+          index: true,
+          element: <Home />
+        },
+        {
+          path: '/profile',
+          element: (
+            <Suspense fallback={<p>loader...</p>}>
+              <Profile />
+            </Suspense>
+          )
+        }
+      ],
     },
     {
       path: '/auth',
