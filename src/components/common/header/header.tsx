@@ -4,10 +4,10 @@ import { serverUrl } from "@/helpers/shared";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/store";
+import { ModeToggle } from "../mode-toggle";
 
 export default function Header() {
   const { user } = useSelector((state: RootState) => state.auth);
-
   return (
     <header className="py-4 border-b">
       <nav className="container flex items-center justify-between">
@@ -23,14 +23,15 @@ export default function Header() {
             );
           })}
         </ul>
-        <Link to={"/profile"} className="border rounded-full">
-          <Avatar>
-            <AvatarImage
-              src={`${serverUrl}/uploads/${user?.photo}`}
-            />
-            <AvatarFallback>{user?.phone?.slice(4, 6)}</AvatarFallback>
-          </Avatar>
-        </Link>
+        <div className="flex items-center gap-2">
+          <ModeToggle />
+          <Link to={"/profile"} className="border rounded-full">
+            <Avatar>
+              <AvatarImage src={`${serverUrl}/uploads/${user?.photo}`} />
+              <AvatarFallback>{user?.phone?.slice(4, 6)}</AvatarFallback>
+            </Avatar>
+          </Link>
+        </div>
       </nav>
     </header>
   );
