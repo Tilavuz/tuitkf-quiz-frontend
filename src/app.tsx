@@ -1,6 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import RootLayout from "@/layouts/root-layout";
-import AuthPrivate from "@/private/auth-private";
+import UserLayout from "@/layouts/user-layout";
+import UserPrivate from "@/private/user-private";
 import Auth from "@/pages/auth/auth";
 import { lazy, Suspense } from "react";
 
@@ -15,9 +15,9 @@ export default function App() {
     {
       path: "/",
       element: (
-        <AuthPrivate>
-          <RootLayout />
-        </AuthPrivate>
+        <UserPrivate>
+          <UserLayout />
+        </UserPrivate>
       ),
       errorElement: <p>Error page</p>,
       children: [

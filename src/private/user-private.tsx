@@ -5,18 +5,18 @@ import { ReactNode, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 
-export default function AuthPrivate({ children }: { children: ReactNode }) {
-  const { isLogin, user, error } = useSelector((state: RootState) => state.auth)
+export default function UserPrivate({ children }: { children: ReactNode }) {
+  const { isLogin, error, user } = useSelector((state: RootState) => state.auth)
   const { getUser } = useGetUser()
   const token = getToken()
 
   useEffect(() => {
-    if(!isLogin) {
+    if(token && !isLogin) {
       getUser();
     }
-  }, [getUser])
+  }, [getUser, token])
 
-  if(isLogin && token && user?.role === 'user') {
+  if(isLogin && token && user?.auth.role === 'user') {
     return children
   }else if(token && !error) {
     return <p>Loader...</p>

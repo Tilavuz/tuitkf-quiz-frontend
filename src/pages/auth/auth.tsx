@@ -7,25 +7,30 @@ import { Label } from "@/components/ui/label";
 import { auth, authFail, authStart } from "@/features/auth/auth-slice";
 import { setToken } from "@/helpers/action-token";
 import useGetUser from "@/hooks/use-get-user";
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { useMask } from "@react-input/mask";
 
 export default function Auth() {
-  const nameRef = useRef<HTMLInputElement>(null);
-  const phoneRef = useRef<HTMLInputElement>(null);
+  const phoneRef = useMask({
+    mask: "+998 (__) ___-____",
+    replacement: { _: /\d/ },
+  });
   const passwordRef = useRef<HTMLInputElement>(null);
 
   const dispatch = useDispatch();
-  const { getUser } = useGetUser()
-  const navigate = useNavigate()
+  const { getUser } = useGetUser();
+  const navigate = useNavigate();
 
-  const { loading, isLogin, error } = useSelector((state: RootState) => state.auth);
+  const { loading, isLogin, error } = useSelector(
+    (state: RootState) => state.auth
+  );
 
   useEffect(() => {
-    getUser()
-  }, [getUser])
+    getUser();
+  }, [getUser]);
 
   useEffect(() => {
     if (isLogin && !error) {
@@ -37,8 +42,9 @@ export default function Auth() {
     e.preventDefault();
     try {
       dispatch(authStart());
+      let phone = `${phoneRef?.current?.value?.slice(0, 4)}${phoneRef?.current?.value?.slice(6, 8)}${phoneRef?.current?.value?.slice(10, 13)}${phoneRef?.current?.value?.slice(14, 18)}`
       const authData = {
-        phone: phoneRef?.current?.value,
+        phone,
         password: passwordRef?.current?.value,
       };
 
@@ -77,9 +83,9 @@ export default function Auth() {
             <span className="">Telefon raqamingizni kiriting!</span>
             <Input
               type="text"
-              className="bg-white"
-              placeholder="+998*********"
               defaultValue={"+998"}
+              inputMode="numeric"
+              className="bg-white"
               ref={phoneRef}
             />
           </Label>
@@ -93,9 +99,7 @@ export default function Auth() {
               required={true}
             />
           </Label>
-          <Button type="submit">
-            {loading ? "loading..." : "Kirish"}
-          </Button>
+          <Button type="submit">{loading ? "loading..." : "Kirish"}</Button>
         </form>
       </div>
     </div>
