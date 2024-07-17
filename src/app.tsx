@@ -39,7 +39,7 @@ export default function App() {
           element: <Profile />,
         },
         {
-          path: "/forms",
+          path: "/controllers",
           element: (
             <PrivateRoute roles={["admin", "teacher"]}>
               <Controllers />

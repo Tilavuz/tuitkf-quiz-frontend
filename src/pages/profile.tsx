@@ -95,6 +95,7 @@ export default function Profile() {
                 <Link className="block text-sm hover:underline" to={"/"}>
                   Natija
                 </Link>
+                <Button variant={'link'} className="p-0 text-red-500">Delete</Button>
               </PopoverContent>
             </Popover>
           </li>

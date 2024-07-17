@@ -5,8 +5,8 @@ export const list = [
     roles: ["teacher", "user", "admin"],
   },
   {
-    router: "/forms",
-    title: "Froms",
+    router: "/controllers",
+    title: "Controllers",
     roles: ["teacher", "admin"],
   }
 ];

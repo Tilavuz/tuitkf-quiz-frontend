@@ -10,7 +10,7 @@ import PrivateRoute from "@/private/private-route";
 export default function Header() {
   const { user } = useSelector((state: RootState) => state.auth);
   return (
-    <header className="py-4 border-b">
+    <header className="py-4 border-b select-none">
       <nav className="container flex items-center justify-between">
         <Link to={"/"} className="font-bold text-xl">
           TUITKF<sub className="italic">quiz</sub>
