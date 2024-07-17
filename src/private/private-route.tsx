@@ -29,7 +29,7 @@ export default function PrivateRoute({
   if (!user)
     return <Navigate to={"/auth"} state={{ from: location }} replace={true} />;
 
-  if (user && roles.includes(user.auth.role) && user.status) {
+  if (user && roles.includes(user.auth.role) && user.auth.status) {
     return children;
   }
 }

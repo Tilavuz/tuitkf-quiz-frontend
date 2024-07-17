@@ -1,8 +1,9 @@
 export interface AuthInterface {
-    _id: string,
-    phone: string,
-    password: string,
-    role: 'user' | 'teacher' | 'admin',
+  _id: string;
+  phone: string;
+  password: string;
+  role: "user" | "teacher" | "admin";
+  status: boolean;
 }
 
 export interface UserInterface {
@@ -14,5 +15,4 @@ export interface UserInterface {
     chatId: number,
     action: string,
     auth: AuthInterface,
-    status: boolean
 }
