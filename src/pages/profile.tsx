@@ -17,7 +17,7 @@ export default function Profile() {
           <div className="max-w-[300px] w-full dark:bg-inherit dark:border bg-slate-50 rounded-md">
             <ProfileForm />
           </div>
-          <ul className="flex flex-col gap-2 p-4 rounded-md h-[457px] overflow-hidden overflow-y-auto select-none dark:bg-inherit dark:border bg-slate-50 w-full lg:max-w-[500px]">
+          <ul className="flex flex-col gap-2 p-4 rounded-md h-[547px] overflow-hidden overflow-y-auto select-none dark:bg-inherit dark:border bg-slate-50 w-full lg:max-w-[500px]">
             <li className="flex justify-between px-2 py-1 border items-center">
               <div className="flex flex-col font-mono">
                 <p className="font-bold line-clamp-1">Falsafa fanidan test</p>
@@ -76,7 +76,7 @@ export default function Profile() {
             </li>
           </ul>
         </div>
-        <ul className="flex flex-col gap-2 p-4 rounded-md h-[457px] overflow-hidden overflow-y-auto select-none dark:bg-inherit dark:border bg-slate-50 lg:max-w-[500px] w-full">
+        <ul className="flex flex-col gap-2 p-4 rounded-md h-[547px] overflow-hidden overflow-y-auto select-none dark:bg-inherit dark:border bg-slate-50 lg:max-w-[500px] w-full">
           <li className="flex justify-between px-2 py-1 border items-center">
             <div className="flex flex-col font-mono">
               <p className="font-bold line-clamp-1">Falsafa fanidan test</p>

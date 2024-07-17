@@ -12,6 +12,8 @@ export default function ProfileForm() {
   const { user, loading } = useSelector((state: RootState) => state.auth);
   const [photo, setPhoto] = useState<File | null>(null);
   const nameRef = useRef<HTMLInputElement>(null);
+  const ageRef = useRef<HTMLInputElement>(null);
+  const groupRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
   const dispatch = useDispatch();
@@ -29,13 +31,16 @@ export default function ProfileForm() {
       const changeData = {
         name: nameRef?.current?.value,
         photo,
-        password: passwordRef?.current?.value
+        password: passwordRef?.current?.value,
+        age: ageRef?.current?.value,
+        group: groupRef?.current?.value
       }
       const res = await apiClient.put(`/user/${user?._id}`, changeData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       });
+      
       dispatch(changeUserData(res.data));
     } catch (error: any) {
       if (
@@ -78,11 +83,25 @@ export default function ProfileForm() {
       />
       <Input type="text" value={user?.auth?.phone} disabled />
       <Input
+        defaultValue={user?.age}
+        ref={ageRef}
+        className={`${user?.age ? "" : "border-red-500"}`}
+        type="number"
+        placeholder="Yoshingizni kiriting!"
+      />
+      <Input
+        defaultValue={user?.group}
+        ref={groupRef}
+        className={`${user?.group ? "" : "border-red-500"}`}
+        type="text"
+        placeholder="Guruhingizni kiriting!"
+      />
+      <Input
         ref={passwordRef}
         type="password"
         placeholder="Parolingizni yangilang!"
       />
-      <Button>{loading ? "loading..." : "Change"}</Button>
+      <Button type="submit">{loading ? "loading..." : "Change"}</Button>
     </form>
   );
 }

@@ -1,45 +1,58 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import UserLayout from "@/layouts/user-layout";
-import UserPrivate from "@/private/user-private";
+import RootLayout from "@/layouts/root-layout";
 import Auth from "@/pages/auth/auth";
-import { lazy, Suspense } from "react";
 
+import { AppDispatch } from "@/app/store";
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { getUser } from "@/features/auth/auth-slice";
 
 // Pages
 import Home from "@/pages/home/home";
-const Profile = lazy(() => import("@/pages/profile"));  
+import Profile from "@/pages/profile";
+import PrivateRoute from "@/private/private-route";
+import Controllers from "@/pages/controllers/controllers";
 
 export default function App() {
+  const dispatch: AppDispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getUser());
+  }, [dispatch]);
 
   const router = createBrowserRouter([
     {
       path: "/",
       element: (
-        <UserPrivate>
-          <UserLayout />
-        </UserPrivate>
+        <PrivateRoute roles={['teacher', 'admin', 'user']}>
+          <RootLayout />
+        </PrivateRoute>
       ),
       errorElement: <p>Error page</p>,
       children: [
         {
           index: true,
-          element: <Home />
+          element: <Home />,
         },
         {
-          path: '/profile',
+          path: "/profile",
+          element: <Profile />,
+        },
+        {
+          path: "/forms",
           element: (
-            <Suspense fallback={<p>loader...</p>}>
-              <Profile />
-            </Suspense>
-          )
-        }
+            <PrivateRoute roles={["admin", "teacher"]}>
+              <Controllers />
+            </PrivateRoute>
+          ),
+        },
       ],
     },
     {
-      path: '/auth',
+      path: "/auth",
       element: <Auth />,
-    }
+    },
   ]);
 
-  return <RouterProvider router={router} />
+  return <RouterProvider router={router} />;
 }

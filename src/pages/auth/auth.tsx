@@ -1,15 +1,14 @@
 import { apiClient } from "@/api/api-client";
-import { RootState } from "@/app/store";
+import { AppDispatch, RootState } from "@/app/store";
 import tuitkfLogo from "@/assets/tuitkf-logo.png";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { auth, authFail, authStart } from "@/features/auth/auth-slice";
+import { auth, authFail, authStart, getUser } from "@/features/auth/auth-slice";
 import { setToken } from "@/helpers/action-token";
-import useGetUser from "@/hooks/use-get-user";
 import { FormEvent, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useMask } from "@react-input/mask";
 
@@ -20,8 +19,7 @@ export default function Auth() {
   });
   const passwordRef = useRef<HTMLInputElement>(null);
 
-  const dispatch = useDispatch();
-  const { getUser } = useGetUser();
+  const dispatch: AppDispatch = useDispatch();
   const navigate = useNavigate();
 
   const { loading, isLogin, error } = useSelector(
@@ -29,8 +27,8 @@ export default function Auth() {
   );
 
   useEffect(() => {
-    getUser();
-  }, [getUser]);
+    dispatch(getUser());
+  }, [dispatch]);
 
   useEffect(() => {
     if (isLogin && !error) {
@@ -42,7 +40,16 @@ export default function Auth() {
     e.preventDefault();
     try {
       dispatch(authStart());
-      let phone = `${phoneRef?.current?.value?.slice(0, 4)}${phoneRef?.current?.value?.slice(6, 8)}${phoneRef?.current?.value?.slice(10, 13)}${phoneRef?.current?.value?.slice(14, 18)}`
+      let phone = `${phoneRef?.current?.value?.slice(
+        0,
+        4
+      )}${phoneRef?.current?.value?.slice(
+        6,
+        8
+      )}${phoneRef?.current?.value?.slice(
+        10,
+        13
+      )}${phoneRef?.current?.value?.slice(14, 18)}`;
       const authData = {
         phone,
         password: passwordRef?.current?.value,
@@ -100,6 +107,12 @@ export default function Auth() {
             />
           </Label>
           <Button type="submit">{loading ? "loading..." : "Kirish"}</Button>
+          <Link
+            to={"https://t.me/tuitkf_quiz_bot"}
+            className="text-right text-xs hover:underline"
+          >
+            Ro'yhatdan o'tish
+          </Link>
         </form>
       </div>
     </div>

@@ -13,5 +13,6 @@ export interface UserInterface {
     photo?: string,
     chatId: number,
     action: string,
-    auth: AuthInterface
+    auth: AuthInterface,
+    status: boolean
 }
