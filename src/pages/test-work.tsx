@@ -12,9 +12,10 @@ import { toast } from "sonner";
 
 export default function TestWork() {
   const location = useLocation();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState<boolean>(true);
   const { id } = useParams();
-  const { user } = useSelector((state: RootState) => state.auth)
+  const { user } = useSelector((state: RootState) => state.auth);
   const [tests, setTests] = useState<QuestionInterface[] | null>(null);
   const [answers, setAnswers] = useState<
     { answer: string; question: string; status: boolean }[] | null
@@ -23,28 +24,28 @@ export default function TestWork() {
     session: SessionInterface;
     solutions: { answer: string; question: string; status: boolean }[] | null;
   }>();
-  
+
   const [modal, setModale] = useState<boolean>(false);
   const [timeLeft, setTimeLeft] = useState(1800);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const saveSession = async () => {
     try {
-        const res = await apiClient.post(`/sessions/add/${id}`, session)
-        toast.success(res.data.message)
-        navigate('/profile')
+      const res = await apiClient.post(`/sessions/add/${id}`, session);
+      toast.success(res.data.message);
+      navigate("/profile");
     } catch (error: any) {
-        if (
-          error.response &&
-          error.response.data &&
-          error.response.data.message
-        ) {
-          toast.error(error.response.data.message);
-        } else {
-          toast.error(error.message);
-        }
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error(error.message);
       }
-  }
+    }
+  };
 
   useEffect(() => {
     const startTimer = () => {
@@ -60,23 +61,37 @@ export default function TestWork() {
       }, 1000);
     };
 
-    startTimer();
+    if (!loading) {
+      startTimer();
+    }
 
     return () => {
       clearInterval(timerRef.current!);
     };
-  }, []);
+  }, [loading]);
 
   const handleFinishTest = () => {
     if (timeLeft < 1800) {
-
       setModale(true);
       if (timerRef.current) {
         setSession({
           session: {
             time: timeLeft,
-            score: answers?.filter((answer) => answer.status === true).length ? answers?.filter((answer) => answer.status === true).length * 2 : 0,
-            percent: answers?.filter((answer) => answer.status === true).length && tests?.length ? parseFloat((answers?.filter((answer) => answer.status === true).length / tests?.length * 100).toFixed(1)) : 0,
+            score: answers?.filter((answer) => answer.status === true).length
+              ? answers?.filter((answer) => answer.status === true).length * 2
+              : 0,
+            percent:
+              answers?.filter((answer) => answer.status === true).length &&
+              tests?.length
+                ? parseFloat(
+                    (
+                      (answers?.filter((answer) => answer.status === true)
+                        .length /
+                        tests?.length) *
+                      100
+                    ).toFixed(1)
+                  )
+                : 0,
           },
           solutions: answers ? answers : null,
         });
@@ -100,7 +115,10 @@ export default function TestWork() {
   useEffect(() => {
     (async function () {
       try {
-        const res = await apiClient.post(`/tests/${id}`, { order: location.state.order, random: location.state.random });
+        const res = await apiClient.post(`/tests/${id}`, {
+          order: location.state.order,
+          random: location.state.random,
+        });
         if (Array.isArray(res.data)) {
           setTests(res.data);
         } else {
@@ -108,33 +126,29 @@ export default function TestWork() {
         }
       } catch (error) {
         console.error("Error fetching test data:", error);
+      } finally {
+        setLoading(false);
       }
     })();
   }, [id, location.state]);
 
-  const handleAnswer = async (value: string, id: string) => {
-    try {
-        const res = await apiClient.post(`/tests/answer/${id}`, { value });
-        setAnswers((prev) => {
-          if (prev && res.data) {
-            return [...prev, res.data];
-          } else if (res.data) {
-            return [res.data];
-          } else {
-            return prev;
-          }
-        });
-    } catch (error: any) {
-        if (
-          error.response &&
-          error.response.data &&
-          error.response.data.message
-        ) {
-          toast.error(error.response.data.message);
-        } else {
-          toast.error(error.message);
-        }
+  const handleAnswer = async (
+    answer: string,
+    question: string,
+    correct_answer: string
+  ) => {
+    setAnswers((prev) => {
+      if (prev && answer && question && correct_answer) {
+        return [
+          ...prev,
+          { answer, question, status: correct_answer === answer },
+        ];
+      } else if (!prev) {
+        return [{ answer, question, status: correct_answer === answer }];
+      } else {
+        return prev;
       }
+    });
   };
 
   const getLabelClass = (question: string, option: string) => {
@@ -162,7 +176,9 @@ export default function TestWork() {
           <p className="font-bold text-2xl">{formatTime(timeLeft)}</p>
         </div>
         <div className="flex flex-col gap-4">
-          {tests && Array.isArray(tests) ? (
+          {tests &&
+            !loading &&
+            Array.isArray(tests) &&
             tests.map((test, i) => (
               <div key={test._id} className="border p-2">
                 <div className="flex items-start gap-2 mb-4">
@@ -177,7 +193,9 @@ export default function TestWork() {
                     modal ||
                     answers?.some((answer) => answer.question === test.question)
                   }
-                  onValueChange={(value) => handleAnswer(value, test._id)}
+                  onValueChange={(value) =>
+                    handleAnswer(value, test.question, test.correct_answer)
+                  }
                 >
                   {test.options.map((option, index) => (
                     <div key={`${test._id}-${index}`}>
@@ -194,10 +212,8 @@ export default function TestWork() {
                   ))}
                 </RadioGroup>
               </div>
-            ))
-          ) : (
-            <div>No questions available</div>
-          )}
+            ))}
+          {!loading && <div>Bu fan bo'yicha hali test mavjut!</div>}
         </div>
         <div className="w-full flex justify-end p-4">
           <Button onClick={() => handleFinishTest()}>Tugatish</Button>
@@ -244,21 +260,27 @@ export default function TestWork() {
                 <span className="font-bold">Foiz</span>
                 <span className="capitalize">
                   {answers?.filter((answer) => answer.status === true).length &&
-                    tests?.length ?
-                    parseFloat(
-                      (
-                        (answers?.filter((answer) => answer.status === true)
-                          .length /
-                          tests?.length) *
-                        100
-                      ).toFixed(1)
-                    ) : 0}
+                  tests?.length
+                    ? parseFloat(
+                        (
+                          (answers?.filter((answer) => answer.status === true)
+                            .length /
+                            tests?.length) *
+                          100
+                        ).toFixed(1)
+                      )
+                    : 0}
                   %
                 </span>
               </li>
             </ul>
             <div className="flex gap-2 justify-end">
-              <Button onClick={() => saveSession()} disabled={location.state.order === 'a'}>Saqlash</Button>
+              <Button
+                onClick={() => saveSession()}
+                disabled={location.state.order === "a"}
+              >
+                Saqlash
+              </Button>
               <Button variant={"ghost"}>
                 <Link to={"/profile"}>Ortga qaytish</Link>
               </Button>
