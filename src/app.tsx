@@ -14,6 +14,7 @@ import PrivateRoute from "@/private/private-route";
 import Controllers from "@/pages/controllers/controllers";
 import User from "@/pages/user";
 import Science from "@/pages/science";
+import TestWork from "@/pages/test-work";
 
 export default function App() {
   const dispatch: AppDispatch = useDispatch();
@@ -61,6 +62,14 @@ export default function App() {
           element: (
             <PrivateRoute roles={["admin", "teacher"]}>
               <Science />
+            </PrivateRoute>
+          ),
+        },
+        {
+          path: "/profile/tests/:id",
+          element: (
+            <PrivateRoute roles={["admin", "teacher", "user"]}>
+              <TestWork />
             </PrivateRoute>
           ),
         },

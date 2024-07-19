@@ -1,3 +1,4 @@
+import Questions from "@/components/controllers/questions";
 import ScienceForm from "@/components/controllers/science-form";
 import Sciences from "@/components/controllers/sciences";
 import Users from "@/components/controllers/users";
@@ -10,10 +11,11 @@ export default function Controllers() {
         <PrivateRoute roles={['admin']}>
           <Users />
         </PrivateRoute>
-        <div className="w-full flex flex-col gap-2">
+        <div className="flex flex-col gap-2 w-full max-w-[500px]">
           <ScienceForm />
           <Sciences />
         </div>
+        <Questions />
       </div>
     </div>
   );

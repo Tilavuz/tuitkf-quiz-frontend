@@ -15,6 +15,7 @@ import { RootState } from "@/app/store";
 import { getSciences, removeScience } from "@/features/sciences/sciences-slice";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { getQuestions } from "@/features/question/question-slice";
 
 export default function Sciences() {
   const dispatch = useDispatch();
@@ -27,7 +28,7 @@ export default function Sciences() {
       const res = await apiClient.get(
         `/sciences?page=${currentPage}&limit=${limit}`
       );
-      
+
       dispatch(getSciences(res.data));
     } catch (error: any) {
       if (
@@ -42,11 +43,10 @@ export default function Sciences() {
     }
   };
 
-  const deleteScience = async (id: string) => {
+  const checkScience = async (id: string) => {
     try {
-      const res = await apiClient.delete(`/sciences/delete/${id}`)
-      dispatch(removeScience(id))
-      toast.success(res.data.message)
+      const res = await apiClient.get(`/questions/${id}?page=1&limit=25`);
+      dispatch(getQuestions({...res.data, id}))
     } catch (error: any) {
       if (
         error.response &&
@@ -59,6 +59,24 @@ export default function Sciences() {
       }
     }
   }
+
+  const deleteScience = async (id: string) => {
+    try {
+      const res = await apiClient.delete(`/sciences/delete/${id}`);
+      dispatch(removeScience(id));
+      toast.success(res.data.message);
+    } catch (error: any) {
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error(error.message);
+      }
+    }
+  };
 
   useEffect(() => {
     (async function () {
@@ -113,6 +131,13 @@ export default function Sciences() {
                 <PopoverContent className="max-w-24">
                   <Button variant={"link"} className="p-0">
                     <Link to={`sciences/${science._id}`}>Ko'rish</Link>
+                  </Button>
+                  <Button
+                    onClick={() => checkScience(science._id)}
+                    variant={"link"}
+                    className="p-0"
+                  >
+                    Tanlash
                   </Button>
                   <Button
                     onClick={() => deleteScience(science._id)}

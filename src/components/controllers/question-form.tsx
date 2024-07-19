@@ -44,6 +44,8 @@ export default function QuestionForm({ id }: { id: string }) {
       };
       const res = await apiClient.post("/questions/add", questionData);
       toast.success(res.data.message);
+      setOptions(null)
+      setQuestion(null)
     } catch (error: any) {
       if (
         error.response &&

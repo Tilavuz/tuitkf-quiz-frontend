@@ -1,7 +1,7 @@
 import { apiClient } from "@/api/api-client";
 import { RootState } from "@/app/store";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import {
   Pagination,
   PaginationContent,
@@ -18,12 +18,16 @@ import {
 } from "@/components/ui/select";
 import { getSciences } from "@/features/sciences/sciences-slice";
 import { ClipboardList } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 export default function ProfileSciences() {
   const dispatch = useDispatch();
+  const navigate = useNavigate()
+  const [order, setOrder] = useState<string>()
+  const [random, setRandom] = useState<string>();
   const { sciences, scienceTotalPages, scienceCurrentPage } = useSelector(
     (state: RootState) => state.science
   );
@@ -67,6 +71,14 @@ export default function ProfileSciences() {
     }
   };
 
+  const startTest = (id: string, title: string) => {
+    if(!order || !random) {
+      toast.error('Malumot yetarli emas!')
+      return
+    }
+    navigate(`tests/${id}`, { state: { order, random, title } })
+  }
+
   return (
     <ul className="flex flex-col gap-2 p-4 rounded-md h-[527px] overflow-hidden overflow-y-auto select-none dark:bg-inherit dark:border bg-slate-50 w-full lg:max-w-[500px]">
       {sciences &&
@@ -90,8 +102,10 @@ export default function ProfileSciences() {
                   <Button>Ishlash</Button>
                 </DialogTrigger>
                 <DialogContent>
-                  <form className="flex flex-col gap-3">
-                    <Select>
+                  <DialogTitle></DialogTitle>
+                  <DialogDescription></DialogDescription>
+                  <div className="flex flex-col gap-3">
+                    <Select onValueChange={setOrder}>
                       <SelectTrigger>
                         <SelectValue placeholder="Variantlar" />
                       </SelectTrigger>
@@ -102,12 +116,12 @@ export default function ProfileSciences() {
                         </SelectItem>
                       </SelectContent>
                     </Select>
-                    <Select>
+                    <Select onValueChange={setRandom}>
                       <SelectTrigger>
                         <SelectValue placeholder="Testlar" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="random">Tasodifiy</SelectItem>
+                        <SelectItem value="mix">Tasodifiy</SelectItem>
                         {Array.from(
                           {
                             length:
@@ -125,8 +139,8 @@ export default function ProfileSciences() {
                         })}
                       </SelectContent>
                     </Select>
-                    <Button>Boshlash</Button>
-                  </form>
+                    <Button onClick={() => startTest(science._id, science.title)}>Boshlash</Button>
+                  </div>
                 </DialogContent>
               </Dialog>
             </li>
