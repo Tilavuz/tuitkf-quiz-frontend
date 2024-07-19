@@ -108,6 +108,7 @@ export default function Auth() {
           </Label>
           <Button type="submit">{loading ? "loading..." : "Kirish"}</Button>
           <Link
+          target="_blanck"
             to={"https://t.me/tuitkf_quiz_bot"}
             className="text-right text-xs hover:underline"
           >

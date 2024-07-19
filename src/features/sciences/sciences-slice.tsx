@@ -5,14 +5,14 @@ export interface SciencesState {
   sciences: ScienceInterface[] | null;
   loading: boolean;
   scienceTotalPages: number | null;
-  sciencesCurrentPage: number | null;
+  scienceCurrentPage: number | null;
 }
 
 const initialState: SciencesState = {
   sciences: null,
   loading: false,
   scienceTotalPages: null,
-  sciencesCurrentPage: null,
+  scienceCurrentPage: null,
 };
 
 const sciencesSlice = createSlice({
@@ -23,26 +23,26 @@ const sciencesSlice = createSlice({
       state,
       action: PayloadAction<{
         scienceTotalPages: number;
-        sciencesCurrentPage: number;
+        scienceCurrentPage: number;
         sciences: ScienceInterface[];
       }>
     ) => {
       (state.loading = false),
         (state.sciences = action.payload.sciences),
         (state.scienceTotalPages = action.payload.scienceTotalPages),
-        (state.sciencesCurrentPage = action.payload.sciencesCurrentPage);
+        (state.scienceCurrentPage = action.payload.scienceCurrentPage);
     },
     startGetSciences: (state) => {
       state.loading = true;
     },
-    addScience: (state, action: PayloadAction<ScienceInterface>) => {
+    createScience: (state, action: PayloadAction<ScienceInterface>) => {
       if (state.sciences) {
         state.sciences.push(action.payload);
       } else {
         state.sciences = [action.payload];
       }
     },
-    chnageScience: (state, action: PayloadAction<ScienceInterface>) => {
+    changeScience: (state, action: PayloadAction<ScienceInterface>) => {
       if (state.sciences) {
         state.sciences = state.sciences.filter((science) =>
           science._id === action.payload._id ? action.payload : science
@@ -59,6 +59,12 @@ const sciencesSlice = createSlice({
   },
 });
 
-export const { getSciences, startGetSciences } = sciencesSlice.actions;
+export const {
+  getSciences,
+  startGetSciences,
+  createScience,
+  changeScience,
+  removeScience,
+} = sciencesSlice.actions;
 
 export default sciencesSlice.reducer;

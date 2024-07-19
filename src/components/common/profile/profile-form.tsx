@@ -80,6 +80,9 @@ export default function ProfileForm() {
         defaultValue={user?.name}
         type="text"
         placeholder="Ism familyangizni yangilang!"
+        className={`${
+          user?.name?.toLowerCase() === "anonymous" ? "border-red-500" : ""
+        }`}
       />
       <Input type="text" value={user?.auth?.phone} disabled />
       <Input

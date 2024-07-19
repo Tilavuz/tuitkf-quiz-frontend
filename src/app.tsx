@@ -9,9 +9,11 @@ import { getUser } from "@/features/auth/auth-slice";
 
 // Pages
 import Home from "@/pages/home/home";
-import Profile from "@/pages/profile";
+import Profile from "@/pages/profile/profile";
 import PrivateRoute from "@/private/private-route";
 import Controllers from "@/pages/controllers/controllers";
+import User from "@/pages/user";
+import Science from "@/pages/science";
 
 export default function App() {
   const dispatch: AppDispatch = useDispatch();
@@ -24,7 +26,7 @@ export default function App() {
     {
       path: "/",
       element: (
-        <PrivateRoute roles={['teacher', 'admin', 'user']}>
+        <PrivateRoute roles={["teacher", "admin", "user"]}>
           <RootLayout />
         </PrivateRoute>
       ),
@@ -43,6 +45,22 @@ export default function App() {
           element: (
             <PrivateRoute roles={["admin", "teacher"]}>
               <Controllers />
+            </PrivateRoute>
+          ),
+        },
+        {
+          path: "/controllers/users/:id",
+          element: (
+            <PrivateRoute roles={["admin"]}>
+              <User />
+            </PrivateRoute>
+          ),
+        },
+        {
+          path: "/controllers/sciences/:id",
+          element: (
+            <PrivateRoute roles={["admin", "teacher"]}>
+              <Science />
             </PrivateRoute>
           ),
         },
