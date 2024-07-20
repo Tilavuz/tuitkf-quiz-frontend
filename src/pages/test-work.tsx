@@ -76,7 +76,8 @@ export default function TestWork() {
       if (timerRef.current) {
         setSession({
           session: {
-            time: timeLeft,
+            questions: tests?.length ? tests?.length : 0,
+            time: 1800 - timeLeft,
             score: answers?.filter((answer) => answer.status === true).length
               ? answers?.filter((answer) => answer.status === true).length * 2
               : 0,
@@ -213,14 +214,14 @@ export default function TestWork() {
                 </RadioGroup>
               </div>
             ))}
-          {!loading && <div>Bu fan bo'yicha hali test mavjut!</div>}
+          {!loading && !tests && <div>Bu fan bo'yicha hali test mavjut!</div>}
         </div>
         <div className="w-full flex justify-end p-4">
           <Button onClick={() => handleFinishTest()}>Tugatish</Button>
         </div>
       </div>
       {modal && (
-        <div className="absolute top-0 left-0 w-screen h-screen bg-black/60 flex items-center justify-center">
+        <div className="absolute top-0 left-0 w-screen h-screen bg-black/60 flex items-center justify-center dark:text-black">
           <div className="max-w-[700px] w-full bg-white rounded-lg py-4">
             <h3 className="font-bold text-xl px-2 pb-2">Test natijasi</h3>
             <ul className="mb-4">
@@ -239,8 +240,8 @@ export default function TestWork() {
               <li className="bg-slate-100 px-2 py-4 flex items-center gap-4">
                 <span className="font-bold">Vaqt</span>
                 <span className="capitalize">{`${Math.floor(
-                  timeLeft / 60
-                )}m ${Math.floor(timeLeft % 60)}s`}</span>
+                  (1800 - timeLeft) / 60
+                )}m ${Math.floor((1800 - timeLeft) % 60)}s`}</span>
               </li>
               <li className="px-2 py-4 flex items-center gap-4">
                 <span className="font-bold">Savollar</span>
@@ -256,7 +257,7 @@ export default function TestWork() {
                     : 0}
                 </span>
               </li>
-              <li className="bg-slate-100 px-2 py-4 flex items-center gap-4">
+              <li className="px-2 py-4 flex items-center gap-4">
                 <span className="font-bold">Foiz</span>
                 <span className="capitalize">
                   {answers?.filter((answer) => answer.status === true).length &&

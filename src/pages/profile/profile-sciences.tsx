@@ -80,7 +80,7 @@ export default function ProfileSciences() {
   }
 
   return (
-    <ul className="flex flex-col gap-2 p-4 rounded-md h-[527px] overflow-hidden overflow-y-auto select-none dark:bg-inherit dark:border bg-slate-50 w-full lg:max-w-[500px]">
+    <ul className="flex flex-col gap-2 p-4 rounded-md h-[548px] overflow-hidden overflow-y-auto select-none dark:bg-inherit dark:border bg-slate-50 w-full lg:max-w-[500px]">
       {sciences &&
         sciences.map((science) => {
           return (
@@ -89,7 +89,9 @@ export default function ProfileSciences() {
               className="flex justify-between px-2 py-1 border items-center"
             >
               <div className="flex flex-col font-mono">
-                <p className="font-bold line-clamp-1">{science?.title}</p>
+                <p className="font-bold line-clamp-1">
+                  <span>{science?.title}</span> <span className="bg-red-500 text-white px-1 rounded-lg">{science?.semester}-sr</span>
+                </p>
                 <p className="flex items-center gap-1">
                   <span className="text-sm">{science?.teacher}</span>
                   <span className="text-sm bg-green-500 text-white font-extrabold px-1 rounded-lg">
@@ -139,7 +141,11 @@ export default function ProfileSciences() {
                         })}
                       </SelectContent>
                     </Select>
-                    <Button onClick={() => startTest(science._id, science.title)}>Boshlash</Button>
+                    <Button
+                      onClick={() => startTest(science._id, science.title)}
+                    >
+                      Boshlash
+                    </Button>
                   </div>
                 </DialogContent>
               </Dialog>
