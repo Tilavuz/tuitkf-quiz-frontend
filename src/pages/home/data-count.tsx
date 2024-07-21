@@ -31,7 +31,7 @@ export default function DataCount() {
   }, []);
   return (
     <div className="flex items-start gap-4 justify-between flex-wrap mb-6">
-      <div className="flex items-start justify-between w-full  border max-w-[300px] p-4 rounded-lg">
+      <div className="flex items-start justify-between w-full  border md:max-w-[300px] p-4 rounded-lg">
         <div className="">
           <h4 className="font-bold text-xl font-mono">Foydalanuvchilar</h4>
           <span className="text-xl italic font-bold">{statistics?.users}</span>
@@ -40,7 +40,7 @@ export default function DataCount() {
           <Users />
         </div>
       </div>
-      <div className="flex items-start justify-between w-full  border max-w-[300px] p-4 rounded-lg">
+      <div className="flex items-start justify-between w-full  border md:max-w-[300px] p-4 rounded-lg">
         <div className="">
           <h4 className="font-bold text-xl font-mono">Testlar soni</h4>
           <span className="text-xl italic font-bold">
@@ -51,7 +51,7 @@ export default function DataCount() {
           <BookOpenCheck />
         </div>
       </div>
-      <div className="flex items-start justify-between w-full  border max-w-[300px] p-4 rounded-lg">
+      <div className="flex items-start justify-between w-full  border md:max-w-[300px] p-4 rounded-lg">
         <div className="">
           <h4 className="font-bold text-xl font-mono">Adminlar soni</h4>
           <span className="text-xl italic font-bold">{statistics?.admins}</span>
@@ -60,7 +60,7 @@ export default function DataCount() {
           <Shield />
         </div>
       </div>
-      <div className="flex items-start justify-between w-full  border max-w-[300px] p-4 rounded-lg">
+      <div className="flex items-start justify-between w-full  border md:max-w-[300px] p-4 rounded-lg">
         <div className="">
           <h4 className="font-bold text-xl font-mono">Barcha savollar soni</h4>
           <span className="text-xl italic font-bold">

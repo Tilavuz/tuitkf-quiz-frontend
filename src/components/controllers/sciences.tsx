@@ -98,7 +98,7 @@ export default function Sciences() {
   }, []);
 
   return (
-    <ul className="flex flex-col gap-2 p-4 rounded-md h-[483px] overflow-hidden overflow-y-auto select-none dark:bg-inherit dark:border bg-slate-50 w-full lg:max-w-[500px]">
+    <ul className="flex flex-col gap-2 p-4 rounded-md h-[483px] overflow-hidden overflow-y-auto select-none dark:bg-inherit dark:border bg-slate-50 w-full">
       {sciences &&
         sciences.map((science) => {
           return (

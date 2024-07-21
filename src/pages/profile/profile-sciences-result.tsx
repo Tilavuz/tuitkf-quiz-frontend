@@ -55,7 +55,7 @@ export default function ProfileSciencesResult() {
     }
   };
   return (
-    <ul className="flex flex-col gap-2 p-4 rounded-md h-[547px] overflow-hidden overflow-y-auto select-none dark:bg-inherit dark:border bg-slate-50 lg:max-w-[500px] w-full">
+    <ul className="flex flex-col gap-2 p-4 rounded-md h-[547px] overflow-hidden overflow-y-auto select-none dark:bg-inherit dark:border bg-slate-50 xl:max-w-[500px] w-full">
       {sessions &&
         sessions.map((session) => {
           return (

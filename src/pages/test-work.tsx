@@ -28,6 +28,34 @@ export default function TestWork() {
   const [modal, setModale] = useState<boolean>(false);
   const [timeLeft, setTimeLeft] = useState(1800);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+const alphabet = [
+  "a",
+  "b",
+  "c",
+  "d",
+  "e",
+  "f",
+  "g",
+  "h",
+  "i",
+  "j",
+  "k",
+  "l",
+  "m",
+  "n",
+  "o",
+  "p",
+  "q",
+  "r",
+  "s",
+  "t",
+  "u",
+  "v",
+  "w",
+  "x",
+  "y",
+  "z",
+];
 
   const saveSession = async () => {
     try {
@@ -61,7 +89,7 @@ export default function TestWork() {
       }, 1000);
     };
 
-    if (!loading) {
+    if (!loading && tests?.length) {
       startTimer();
     }
 
@@ -157,8 +185,8 @@ export default function TestWork() {
     if (answer) {
       return answer.answer === option
         ? answer.status
-          ? "bg-green-500"
-          : "bg-red-500"
+          ? "bg-green-500 text-white font-bold"
+          : "bg-red-500 text-white font-bold"
         : "";
     }
     return "";
@@ -201,31 +229,32 @@ export default function TestWork() {
                   {test.options.map((option, index) => (
                     <div key={`${test._id}-${index}`}>
                       <Label
-                        className={`flex items-center gap-2 ${getLabelClass(
+                        className={`flex p-1 items-start gap-2 ${getLabelClass(
                           test.question,
                           option
                         )}`}
                       >
-                        <RadioGroupItem value={option} />
-                        <div dangerouslySetInnerHTML={{ __html: option }} />
+                        <RadioGroupItem className="hidden" value={option} />
+                        <p className="uppercase">{alphabet[index]})</p>
+                        <div className="cursor-pointer" dangerouslySetInnerHTML={{ __html: option }} />
                       </Label>
                     </div>
                   ))}
                 </RadioGroup>
               </div>
             ))}
-          {!loading && !tests && <div>Bu fan bo'yicha hali test mavjut!</div>}
+          {!loading && !tests?.length && <div>Bu fan bo'yicha hali test mavjut emas!</div>}
         </div>
         <div className="w-full flex justify-end p-4">
           <Button onClick={() => handleFinishTest()}>Tugatish</Button>
         </div>
       </div>
       {modal && (
-        <div className="absolute top-0 left-0 w-screen h-screen bg-black/60 flex items-center justify-center dark:text-black">
-          <div className="max-w-[700px] w-full bg-white rounded-lg py-4">
+        <div className="fixed top-0 left-0 w-screen h-screen bg-black/60 dark:bg-black/80 flex items-center justify-center">
+          <div className="max-w-[700px] w-full bg-white rounded-lg py-4 dark:bg-[#020817]">
             <h3 className="font-bold text-xl px-2 pb-2">Test natijasi</h3>
             <ul className="mb-4">
-              <li className="bg-slate-100 px-2 py-4 flex items-center gap-4">
+              <li className="bg-slate-100 dark:bg-black/40 px-2 py-4 flex items-center gap-4">
                 <span className="font-bold">Imtixon</span>
                 <span className="capitalize">{location.state.title}</span>
               </li>
@@ -237,7 +266,7 @@ export default function TestWork() {
                 </span>
                 <span className="capitalize">{user?.name}</span>
               </li>
-              <li className="bg-slate-100 px-2 py-4 flex items-center gap-4">
+              <li className="bg-slate-100 dark:bg-black/40 px-2 py-4 flex items-center gap-4">
                 <span className="font-bold">Vaqt</span>
                 <span className="capitalize">{`${Math.floor(
                   (1800 - timeLeft) / 60
@@ -247,7 +276,7 @@ export default function TestWork() {
                 <span className="font-bold">Savollar</span>
                 <span className="capitalize">{tests?.length}</span>
               </li>
-              <li className="bg-slate-100 px-2 py-4 flex items-center gap-4">
+              <li className="bg-slate-100 dark:bg-black/40 px-2 py-4 flex items-center gap-4">
                 <span className="font-bold">Ball</span>
                 <span className="capitalize">
                   {answers?.filter((answer) => answer.status === true).length &&

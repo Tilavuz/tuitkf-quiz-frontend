@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 import { Button } from "../ui/button";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -20,6 +20,8 @@ export default function QuestionForm({ id }: { id: string }) {
   const [options, setOptions] = useState<string[] | null>(null);
   const [option, setOption] = useState<string | null>(null);
   const [question, setQuestion] = useState<string | null>(null);
+  const fileRef = useRef<HTMLInputElement>(null)
+  const [loading, setLoading] = useState<boolean>(false)
 
   const handleOption = () => {
     setOptions((prev) => {
@@ -44,8 +46,8 @@ export default function QuestionForm({ id }: { id: string }) {
       };
       const res = await apiClient.post("/questions/add", questionData);
       toast.success(res.data.message);
-      setOptions(null)
-      setQuestion(null)
+      setOptions(null);
+      setQuestion(null);
     } catch (error: any) {
       if (
         error.response &&
@@ -59,6 +61,37 @@ export default function QuestionForm({ id }: { id: string }) {
     }
   };
 
+  const sendQuestionFile = async (e: FormEvent) => {
+    e.preventDefault()
+    try {
+    setLoading(true)
+      if(fileRef?.current?.files) {
+        const res = await apiClient.post(
+          `/questions/file/${id}`,
+          { file: fileRef?.current?.files[0] },
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        toast.success(res.data.message)
+      }
+    } catch (error: any) {
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error(error.message);
+      }
+    }finally{
+      setLoading(false)
+    }
+  }
+
   return (
     <div className="flex flex-col w-full items-start gap-4">
       <div className="flex w-full items-start gap-6">
@@ -68,7 +101,7 @@ export default function QuestionForm({ id }: { id: string }) {
             theme="snow"
             modules={{ toolbar: [[{ list: "ordered" }], ["image"]] }}
             formats={["header", "list", "image"]}
-            placeholder="Savolni kiriting"
+            placeholder="Savolni kiriting!"
             onChange={(value) => setQuestion(value)}
           />
           <ReactQuill
@@ -87,7 +120,7 @@ export default function QuestionForm({ id }: { id: string }) {
             type="button"
             disabled={!question}
           >
-            Testni bazga yuborish
+            Testni bazaga yuborish
           </Button>
         </div>
         <div className="">
@@ -110,14 +143,19 @@ export default function QuestionForm({ id }: { id: string }) {
           </div>
         </div>
       </div>
-      <form className="max-w-[500px] w-full">
+      <form
+        onSubmit={(e) => sendQuestionFile(e)}
+        className="max-w-[500px] w-full"
+      >
         <div className="flex items-center gap-4">
-          <Input className="" type="file" />
-          <Button>Test file yuborish</Button>
+          <Input ref={fileRef} type="file" />
+          <Button disabled={loading} type="submit">Test file yuborish</Button>
         </div>
         <Dialog>
           <DialogTrigger asChild>
-            <Button className="mt-2">Namuna</Button>
+            <Button type="button" className="mt-2">
+              Namuna
+            </Button>
           </DialogTrigger>
           <DialogContent className="max-w-[900px] w-full">
             <DialogHeader>

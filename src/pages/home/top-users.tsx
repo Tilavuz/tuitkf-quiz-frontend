@@ -26,7 +26,7 @@ export default function TopUsers() {
                     return (
                       <div
                         key={user?.user?._id}
-                        className="max-w-[300px] border rounded-md"
+                        className="md:max-w-[300px] w-full border rounded-md"
                       >
                         <div className="h-[300px] w-full">
                           <img
@@ -36,7 +36,7 @@ export default function TopUsers() {
                           />
                         </div>
                         <div className="p-2">
-                          <p className="flex items-start justify-between">
+                          <p className="flex items-start justify-between gap-2">
                             <span className="font-bold">
                               {user?.user?.name}
                             </span>
@@ -44,31 +44,31 @@ export default function TopUsers() {
                               {user?.user?.group}
                             </span>
                           </p>
-                          <p className="flex items-start justify-between">
+                          <p className="flex items-start justify-between gap-2">
                             <span className="font-bold">Fan</span>
-                            <span className="font-mono">
+                            <span className="font-mono line-clamp-1">
                               {user.session?.science_id?.title}
                             </span>
                           </p>
-                          <p className="flex items-start justify-between">
+                          <p className="flex items-start justify-between gap-2">
                             <span className="font-bold">Ball</span>
                             <span className="font-mono">
                               {user?.session?.score}
                             </span>
                           </p>
-                          <p className="flex items-start justify-between">
+                          <p className="flex items-start justify-between gap-2">
                             <span className="font-bold">Savollar</span>
                             <span className="font-mono">
                               {user?.session?.questions}
                             </span>
                           </p>
-                          <p className="flex items-start justify-between">
+                          <p className="flex items-start justify-between gap-2">
                             <span className="font-bold">Foiz</span>
                             <span className="font-mono">
                               {user?.session?.percent}%
                             </span>
                           </p>
-                          <p className="flex items-start justify-between">
+                          <p className="flex items-start justify-between gap-2">
                             <span className="font-bold">Vaqt</span>
                             <span className="font-mono">
                               {Math.floor(user?.session?.time / 60)}m {Math.floor(user?.session?.time % 60)}s

@@ -52,7 +52,7 @@ export default function ScienceForm() {
   return (
     <form
       onSubmit={(e) => addScience(e)}
-      className="max-w-[500px] flex flex-col gap-2 p-2 border"
+      className="flex flex-col gap-2 p-2 border w-full"
     >
       <Input required ref={titleRef} type="text" placeholder="Fan nomi!" />
       <Input

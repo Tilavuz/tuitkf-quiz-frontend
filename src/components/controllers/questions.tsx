@@ -61,7 +61,7 @@ export default function Questions() {
 
 
   return (
-    <div className="w-full h-[721px] border overflow-y-auto">
+    <div className="h-[721px] w-full border overflow-y-auto">
       <div className="flex flex-col gap-4">
         {questions &&
           questions?.map((question, i) => {

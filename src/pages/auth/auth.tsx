@@ -78,9 +78,9 @@ export default function Auth() {
 
   return (
     <div className="w-screen h-screen flex items-center justify-center font-serif select-none">
-      <div className="max-w-[750px] w-full py-20 bg-slate-200 flex items-center flex-wrap justify-around gap-4 rounded-lg">
+      <div className="max-w-[750px] w-full py-20 bg-slate-200 dark:bg-inherit flex items-center flex-wrap justify-around gap-4 rounded-lg dark:border">
         <div className="rounded-full h-[200px] w-[200px] bg-white">
-          <img width={200} height={200} src={tuitkfLogo} alt="tuitkf logo" />
+          <img className="shadow-lg shadow-white rounded-full" width={200} height={200} src={tuitkfLogo} alt="tuitkf logo" />
         </div>
         <form
           onSubmit={(e) => handleSubmit(e)}
@@ -92,7 +92,7 @@ export default function Auth() {
               type="text"
               defaultValue={"+998"}
               inputMode="numeric"
-              className="bg-white"
+              className="bg-white dark:bg-inherit"
               ref={phoneRef}
             />
           </Label>
@@ -100,7 +100,7 @@ export default function Auth() {
             <span className="">Parolingizni kiriting!</span>
             <Input
               type="password"
-              className="bg-white"
+              className="bg-white dark:bg-inherit"
               placeholder="********"
               ref={passwordRef}
               required={true}

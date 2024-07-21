@@ -17,7 +17,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { getSciences } from "@/features/sciences/sciences-slice";
-import { ClipboardList } from "lucide-react";
+import { ClipboardList, MousePointerClick } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -80,7 +80,7 @@ export default function ProfileSciences() {
   }
 
   return (
-    <ul className="flex flex-col gap-2 p-4 rounded-md h-[548px] overflow-hidden overflow-y-auto select-none dark:bg-inherit dark:border bg-slate-50 w-full lg:max-w-[500px]">
+    <ul className="flex flex-col gap-2 p-4 rounded-md h-[548px] overflow-hidden overflow-y-auto select-none dark:bg-inherit dark:border bg-slate-50 w-full xl:max-w-[500px]">
       {sciences &&
         sciences.map((science) => {
           return (
@@ -90,18 +90,23 @@ export default function ProfileSciences() {
             >
               <div className="flex flex-col font-mono">
                 <p className="font-bold line-clamp-1">
-                  <span>{science?.title}</span> <span className="bg-red-500 text-white px-1 rounded-lg">{science?.semester}-sr</span>
+                  <span>{science?.title}</span>{" "}
+                  <span className="bg-red-500 text-white px-1 rounded-lg whitespace-nowrap">
+                    {science?.semester}-sr
+                  </span>
                 </p>
                 <p className="flex items-center gap-1">
                   <span className="text-sm">{science?.teacher}</span>
-                  <span className="text-sm bg-green-500 text-white font-extrabold px-1 rounded-lg">
+                  <span className="text-sm bg-green-500 text-white font-extrabold px-1 rounded-lg whitespace-nowrap">
                     {science?.course}-kurs
                   </span>
                 </p>
               </div>
               <Dialog>
                 <DialogTrigger asChild>
-                  <Button>Ishlash</Button>
+                  <Button variant={'outline'}>
+                    <MousePointerClick />
+                  </Button>
                 </DialogTrigger>
                 <DialogContent>
                   <DialogTitle></DialogTitle>

@@ -98,7 +98,7 @@ export default function Users() {
   }
 
   return (
-    <div className="border max-w-[600px] w-full h-[720px] overflow-y-auto p-2 flex flex-col justify-between">
+    <div className="border lg:max-w-[600px] w-full h-[720px] overflow-y-auto p-2 flex flex-col justify-between">
       <ul className="flex flex-col gap-2">
         {users &&
           users.map((user) => {
