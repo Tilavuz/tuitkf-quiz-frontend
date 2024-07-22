@@ -8,5 +8,10 @@ export const list = [
     router: "/controllers",
     title: "Controllers",
     roles: ["teacher", "admin"],
-  }
+  },
+  {
+    router: "/news",
+    title: "Yangiliklar",
+    roles: ["teacher", "admin", 'user'],
+  },
 ];
