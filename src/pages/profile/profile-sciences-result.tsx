@@ -1,23 +1,28 @@
 import { apiClient } from "@/api/api-client";
+import { RootState } from "@/app/store";
 import { Button } from "@/components/ui/button";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { SessionInterface } from "@/interface/session-interface";
+import { getSessions, removeSession } from "@/features/sessions/sessions-slice";
 import { Ellipsis } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 
 export default function ProfileSciencesResult() {
-  const [sessions, setSessions] = useState<SessionInterface[] | null>(null);
+  const { sessions } = useSelector((state: RootState) => state.sessions)
+  const dispatch = useDispatch()
   useEffect(() => {
     (async function () {
       try {
-        const res = await apiClient.get("/sessions");
-        setSessions(res.data);
+        if (!sessions) {
+          const res = await apiClient.get("/sessions");
+          dispatch(getSessions(res.data));
+        }
       } catch (error: any) {
         if (
           error.response &&
@@ -35,13 +40,7 @@ export default function ProfileSciencesResult() {
   const deleteSession = async (id: string) => {
     try {
       await apiClient.delete(`/sessions/delete/${id}`);
-      setSessions((prev) => {
-        if (prev && id) {
-          return prev?.filter((item) => item._id !== id);
-        } else {
-          return prev;
-        }
-      });
+      dispatch(removeSession(id))
     } catch (error: any) {
       if (
         error.response &&

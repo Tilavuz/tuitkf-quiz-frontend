@@ -35,8 +35,11 @@ export default function ProfileSciences() {
   useEffect(() => {
     (async function () {
       try {
-        const res = await apiClient.get("/sciences?page=1&limit=10");
-        dispatch(getSciences(res.data));
+        if(!sciences) {
+          console.log(2);
+          const res = await apiClient.get("/sciences?page=1&limit=10");
+          dispatch(getSciences(res.data));
+        }
       } catch (error: any) {
         if (
           error.response &&

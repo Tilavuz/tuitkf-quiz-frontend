@@ -1,30 +1,33 @@
 import { apiClient } from "@/api/api-client";
 import { RootState } from "@/app/store";
-import { getTopUsers } from "@/features/top-users/top-users-slice";
+import { getTopFirstUsers } from "@/features/top-users/top-users-slice";
 import { serverUrl } from "@/helpers/shared";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-export default function TopUsers() {
-    const dispatch = useDispatch()
-    const { topUsers } = useSelector((state: RootState) => state.topUsers)
-    useEffect(() => {
-      (async function () {
-        try {
-          if(!topUsers?.length) {
-            const res = await apiClient.get("statistics/top-users");
-          dispatch(getTopUsers(res.data));
-          }
-        } catch (error) {
-          console.log(error);
+export default function FirstCoursTopUsers() {
+ const dispatch = useDispatch();
+ const { topFirstUsers } = useSelector((state: RootState) => state.topUsers);
+    
+  useEffect(() => {
+    (async function () {
+      try {
+        if(!topFirstUsers?.length) {
+            const res = await apiClient.get(
+              "/statistics/top-first-course-users"
+            );
+            dispatch(getTopFirstUsers(res.data));
         }
-      })();
-    }, []);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }, []);
 
   return (
     <div className="flex items-start gap-4 flex-wrap">
-      {topUsers &&
-        topUsers.map((user) => {
+      {topFirstUsers &&
+        topFirstUsers.map((user) => {
           if (user.user) {
             return (
               <div

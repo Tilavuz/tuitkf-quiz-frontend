@@ -3,10 +3,11 @@ import { RootState } from "@/app/store";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { addSession } from "@/features/sessions/sessions-slice";
 import { QuestionInterface } from "@/interface/question-interface";
 import { SessionInterface } from "@/interface/session-interface";
 import { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -24,6 +25,8 @@ export default function TestWork() {
     session: SessionInterface;
     solutions: { answer: string; question: string; status: boolean }[] | null;
   }>();
+
+  const dispatch = useDispatch()
 
   const [modal, setModale] = useState<boolean>(false);
   const [timeLeft, setTimeLeft] = useState(1800);
@@ -61,6 +64,7 @@ const alphabet = [
     try {
       const res = await apiClient.post(`/sessions/add/${id}`, session);
       toast.success(res.data.message);
+      dispatch(addSession(res.data.session))
       navigate("/profile");
     } catch (error: any) {
       if (
@@ -183,11 +187,7 @@ const alphabet = [
   const getLabelClass = (question: string, option: string) => {
     const answer = answers?.find((ans) => ans.question === question);
     if (answer) {
-      return answer.answer === option
-        ? answer.status
-          ? "bg-green-500 text-white font-bold"
-          : "bg-red-500 text-white font-bold"
-        : "";
+      return answer.answer === option ? answer.status ? "bg-green-500 text-white font-bold" : "bg-red-500 text-white font-bold" : answer.answer === option && "bg-yellow-500";
     }
     return "";
   };
@@ -205,6 +205,11 @@ const alphabet = [
           <p className="font-bold text-2xl">{formatTime(timeLeft)}</p>
         </div>
         <div className="flex flex-col gap-4">
+          {loading && (
+            <div className="fixed top-0 left-0 w-screen h-screen bg-black/70 flex items-center justify-center">
+              <div className="w-16 h-16 border-8 border-dashed rounded-full animate-spin border-blue-600"></div>
+            </div>
+          )}
           {tests &&
             !loading &&
             Array.isArray(tests) &&
@@ -232,18 +237,32 @@ const alphabet = [
                         className={`flex p-1 items-start gap-2 ${getLabelClass(
                           test.question,
                           option
-                        )}`}
+                        )} ${
+                          answers?.find(
+                            (answer) => answer.question === test.question
+                          ) &&
+                          !answers?.find(
+                            (answer) => answer.question === test.question
+                          )?.status &&
+                          test.correct_answer === option &&
+                          "bg-yellow-500 font-bold text-white "
+                        }`}
                       >
                         <RadioGroupItem className="hidden" value={option} />
                         <p className="uppercase">{alphabet[index]})</p>
-                        <div className="cursor-pointer" dangerouslySetInnerHTML={{ __html: option }} />
+                        <div
+                          className="cursor-pointer"
+                          dangerouslySetInnerHTML={{ __html: option }}
+                        />
                       </Label>
                     </div>
                   ))}
                 </RadioGroup>
               </div>
             ))}
-          {!loading && !tests?.length && <div>Bu fan bo'yicha hali test mavjut emas!</div>}
+          {!loading && !tests?.length && (
+            <div>Bu fan bo'yicha hali test mavjut emas!</div>
+          )}
         </div>
         <div className="w-full flex justify-end p-4">
           <Button onClick={() => handleFinishTest()}>Tugatish</Button>

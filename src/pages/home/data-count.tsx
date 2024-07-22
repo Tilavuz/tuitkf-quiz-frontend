@@ -1,21 +1,22 @@
 import { apiClient } from "@/api/api-client";
+import { RootState } from "@/app/store";
+import { getStatistics } from "@/features/statistics/statistics-slice";
 import { BookOpenCheck, FileQuestion, Shield, Users } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "sonner";
 
 export default function DataCount() {
-  const [statistics, setStatistics] = useState<{
-    users: number;
-    admins: number;
-    questions: number;
-    sciences: number;
-  }>();
+  const statistics = useSelector((state: RootState) => state.statistics)
+  const dispatch = useDispatch()
 
   useEffect(() => {
     (async function () {
       try {
-        const res = await apiClient.get("/statistics");
-        setStatistics(res.data);
+        if (!statistics.admins) {
+          const res = await apiClient.get("/statistics");
+          dispatch(getStatistics(res.data))
+        }
       } catch (error: any) {
         if (
           error.response &&
@@ -29,6 +30,7 @@ export default function DataCount() {
       }
     })();
   }, []);
+
   return (
     <div className="flex items-start gap-4 justify-between flex-wrap mb-6">
       <div className="flex items-start justify-between w-full  border md:max-w-[300px] p-4 rounded-lg">
