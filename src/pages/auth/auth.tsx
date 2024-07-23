@@ -80,7 +80,13 @@ export default function Auth() {
     <div className="w-screen h-screen flex items-center justify-center font-serif select-none">
       <div className="max-w-[750px] w-full py-20 bg-slate-200 dark:bg-inherit flex items-center flex-wrap justify-around gap-4 rounded-lg dark:border">
         <div className="rounded-full h-[200px] w-[200px] bg-white">
-          <img className="shadow-lg shadow-white rounded-full" width={200} height={200} src={tuitkfLogo} alt="tuitkf logo" />
+          <img
+            className="shadow-lg shadow-white rounded-full"
+            width={200}
+            height={200}
+            src={tuitkfLogo}
+            alt="tuitkf logo"
+          />
         </div>
         <form
           onSubmit={(e) => handleSubmit(e)}
@@ -89,6 +95,7 @@ export default function Auth() {
           <Label className="flex flex-col gap-2">
             <span className="">Telefon raqamingizni kiriting!</span>
             <Input
+              disabled={loading}
               type="text"
               defaultValue={"+998"}
               inputMode="numeric"
@@ -99,6 +106,7 @@ export default function Auth() {
           <Label className="flex flex-col gap-2">
             <span className="">Parolingizni kiriting!</span>
             <Input
+              disabled={loading}
               type="password"
               className="bg-white dark:bg-inherit"
               placeholder="********"
@@ -106,9 +114,11 @@ export default function Auth() {
               required={true}
             />
           </Label>
-          <Button type="submit">{loading ? "loading..." : "Kirish"}</Button>
+          <Button disabled={loading} type="submit">
+            {loading ? "loading..." : "Kirish"}
+          </Button>
           <Link
-          target="_blanck"
+            target="_blanck"
             to={"https://t.me/tuitkf_quiz_bot"}
             className="text-right text-xs hover:underline"
           >
