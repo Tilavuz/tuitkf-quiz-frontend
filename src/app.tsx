@@ -16,7 +16,8 @@ import User from "@/pages/user";
 import Science from "@/pages/science";
 import TestWork from "@/pages/test-work";
 import Session from "@/pages/session";
-import News from "@/pages/news";
+import News from "@/pages/news/news";
+import NewsOne from "./pages/news/news-one";
 
 export default function App() {
   const dispatch: AppDispatch = useDispatch();
@@ -88,6 +89,14 @@ export default function App() {
           element: (
             <PrivateRoute roles={["admin", "teacher", "user"]}>
               <News />
+            </PrivateRoute>
+          ),
+        },
+        {
+          path: "/news/:id",
+          element: (
+            <PrivateRoute roles={["admin", "teacher", "user"]}>
+              <NewsOne />
             </PrivateRoute>
           ),
         },

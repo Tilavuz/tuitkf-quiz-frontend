@@ -37,7 +37,7 @@ const sciencesSlice = createSlice({
     },
     createScience: (state, action: PayloadAction<ScienceInterface>) => {
       if (state.sciences) {
-        state.sciences.push(action.payload);
+        state.sciences = [action.payload, ...state.sciences];
       } else {
         state.sciences = [action.payload];
       }

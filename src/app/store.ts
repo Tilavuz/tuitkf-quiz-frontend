@@ -6,6 +6,7 @@ import questionReducer from "@/features/question/question-slice";
 import statisticsReducer from "@/features/statistics/statistics-slice";
 import sessionsReducer from "@/features/sessions/sessions-slice";
 import topUsersReducer from "@/features/top-users/top-users-slice";
+import newsReducer from "@/features/news/news-slice";
 
 export const store = configureStore({
   reducer: {
@@ -15,6 +16,7 @@ export const store = configureStore({
     question: questionReducer,
     statistics: statisticsReducer,
     sessions: sessionsReducer,
+    news: newsReducer,
     topUsers: topUsersReducer,
   },
 });
