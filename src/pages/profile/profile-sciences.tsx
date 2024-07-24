@@ -36,7 +36,6 @@ export default function ProfileSciences() {
     (async function () {
       try {
         if(!sciences) {
-          console.log(2);
           const res = await apiClient.get("/sciences?page=1&limit=10");
           dispatch(getSciences(res.data));
         }
