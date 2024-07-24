@@ -5,7 +5,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 export interface NewsState {
     loading: boolean,
     news: NewsInterface[] | null,
-    newsBody: NewsBodyInterface | null
+    newsBody: NewsBodyInterface[] | null
 }
 
 const initialState: NewsState = {
@@ -46,7 +46,7 @@ const newsSlice = createSlice({
         );
       }
     },
-    getNewsBody: (state, action: PayloadAction<NewsBodyInterface>) => {
+    getNewsBody: (state, action: PayloadAction<NewsBodyInterface[]>) => {
       state.newsBody = action.payload,
       state.loading = false
     }

@@ -17,10 +17,12 @@ export default function NewsOne() {
 
   const createPost = async () => {
     try {
-        if(post) {
-            const res = await apiClient.post(`/news/body/create/${id}`, {news: post});
-            toast.success(res.data.message)
-        }
+      if (post) {
+        const res = await apiClient.post(`/news/body/create/${id}`, {
+          news: post,
+        });
+        toast.success(res.data.message);
+      }
     } catch (error: any) {
       if (
         error.response &&
@@ -32,7 +34,7 @@ export default function NewsOne() {
         toast.error(error.message);
       }
     }
-  }
+  };
 
   const modules = {
     toolbar: [
@@ -65,11 +67,9 @@ export default function NewsOne() {
   useEffect(() => {
     (async function () {
       try {
-        if(id !== newsBody?.news_id) {
-            dispatch(newsStart());
-            const res = await apiClient.get(`/news/body/${id}`);
-            dispatch(getNewsBody(res.data));
-        }
+        dispatch(newsStart());
+        const res = await apiClient.get(`/news/body/${id}`);
+        dispatch(getNewsBody(res.data));
       } catch (error: any) {
         if (
           error.response &&
@@ -80,8 +80,8 @@ export default function NewsOne() {
         } else {
           toast.error(error.message);
         }
-      }finally{
-        dispatch(newsStop())
+      } finally {
+        dispatch(newsStop());
       }
     })();
   }, []);
@@ -106,7 +106,12 @@ export default function NewsOne() {
       </div>
       {!loading && (
         <div className="py-4">
-          <div dangerouslySetInnerHTML={{ __html: newsBody?.news ?? "" }} />
+          {newsBody &&
+            newsBody?.map((news) => {
+              return (
+                <div key={news._id} dangerouslySetInnerHTML={{ __html: news?.news ?? "" }} />
+              );
+            })}
         </div>
       )}
       {loading && (
